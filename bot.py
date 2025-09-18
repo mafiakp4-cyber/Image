@@ -1,20 +1,20 @@
 import os
 import threading
-import subprocess
 from pyrogram import Client, filters
 from pyrogram.types import Message
 from flask import Flask
+from PIL import Image, ImageEnhance
 
-# 🔑 Config (Environment Variables से)
-API_ID = int(os.environ["API_ID"])
-API_HASH = os.environ["API_HASH"]
-BOT_TOKEN = os.environ["BOT_TOKEN"]
+# 🔑 Config (तेरे API details direct डाल दिए हैं)
+API_ID = 21302239
+API_HASH = "1560930c983fbca6a1fcc8eab760d40d"
+BOT_TOKEN = "8032481645:AAEQuyNikhxdSIc9tXk8QTotj-JmvJUpcdg"
 
 app = Client(
     "ImageEnhancerBot",
-    api_id=21302239,
-    api_hash=1560930c983fbca6a1fcc8eab760d40d,
-    bot_token=8032481645:AAEQuyNikhxdSIc9tXk8QTotj-JmvJUpcdg
+    api_id=API_ID,
+    api_hash=API_HASH,
+    bot_token=BOT_TOKEN
 )
 
 # Dummy Flask app for Render (port binding)
@@ -33,29 +33,32 @@ def run_flask():
 async def start_cmd(client, message: Message):
     await message.reply_text(
         "👋 Welcome to **Image Enhancer Bot**!\n\n"
-        "📷 Just send me a photo and I’ll enhance it using AI ✨\n\n"
-        "Powered by **Real-ESRGAN** 🚀"
+        "📷 Send me a photo and I’ll enhance it in seconds ✨\n\n"
+        "⚡ Powered by **Pillow** (Fast Mode – works on Render)"
     )
 
 # 📷 Handle photo
 @app.on_message(filters.photo & filters.private)
 async def enhance_photo(client: Client, message: Message):
     try:
-        status = await message.reply_text("🔄 Processing your photo, please wait...")
+        status = await message.reply_text("🔄 Processing your photo...")
 
         # Download image
         file_path = await client.download_media(message.photo.file_id, file_name="input.jpg")
 
-        # Output path
+        # Open and enhance
+        img = Image.open(file_path)
+
+        # Contrast + sharpness enhance
+        enhancer = ImageEnhance.Contrast(img)
+        img = enhancer.enhance(1.5)  
+        enhancer = ImageEnhance.Sharpness(img)
+        img = enhancer.enhance(2.0)
+
         output_path = "enhanced.jpg"
+        img.save(output_path)
 
-        # Run Real-ESRGAN enhancement (must be installed in requirements.txt)
-        subprocess.run(
-            ["realesrgan-ncnn-vulkan", "-i", file_path, "-o", output_path],
-            check=True
-        )
-
-        # Send enhanced image
+        # Send back enhanced photo
         await message.reply_photo(output_path, caption="✨ Here is your enhanced photo!")
 
         # Cleanup
