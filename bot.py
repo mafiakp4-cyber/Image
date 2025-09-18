@@ -6,15 +6,15 @@ from pyrogram.types import Message
 from flask import Flask
 
 # 🔑 Config (Environment Variables से)
-API_ID = int(os.environ["21302239"])
-API_HASH = os.environ["1560930c983fbca6a1fcc8eab760d40d"]
-BOT_TOKEN = os.environ["8032481645:AAEQuyNikhxdSIc9tXk8QTotj-JmvJUpcdg"]
+API_ID = int(os.environ["API_ID"])
+API_HASH = os.environ["API_HASH"]
+BOT_TOKEN = os.environ["BOT_TOKEN"]
 
 app = Client(
     "ImageEnhancerBot",
-    api_id=API_ID,
-    api_hash=API_HASH,
-    bot_token=BOT_TOKEN
+    api_id=21302239,
+    api_hash=1560930c983fbca6a1fcc8eab760d40d,
+    bot_token=8032481645:AAEQuyNikhxdSIc9tXk8QTotj-JmvJUpcdg
 )
 
 # Dummy Flask app for Render (port binding)
