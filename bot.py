@@ -6,9 +6,9 @@ from pyrogram.types import Message
 from flask import Flask
 
 # 🔑 Config (Environment Variables से)
-API_ID = int(os.environ["API_ID"])
-API_HASH = os.environ["API_HASH"]
-BOT_TOKEN = os.environ["BOT_TOKEN"]
+API_ID = int(os.environ["21302239"])
+API_HASH = os.environ["1560930c983fbca6a1fcc8eab760d40d"]
+BOT_TOKEN = os.environ["8032481645:AAEQuyNikhxdSIc9tXk8QTotj-JmvJUpcdg"]
 
 app = Client(
     "ImageEnhancerBot",
